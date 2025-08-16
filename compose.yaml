@@ -1,4 +1,50 @@
 services:
+    # Database Services
+    mongodb:
+        container_name: netsocs-mongodb
+        image: mongo:7.0
+        restart: unless-stopped
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER:-root}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
+            - MONGO_INITDB_DATABASE=${MONGO_DATABASE:-netsocs}
+        volumes:
+            - mongodb_data:/data/db
+        ports:
+            - "27017:27017"
+        networks:
+            - netsocs-network
+
+    redis:
+        container_name: netsocs-redis
+        image: redis:7.2-alpine
+        restart: unless-stopped
+        command: redis-server --requirepass ${REDIS_PASS:-password}
+        volumes:
+            - redis_data:/data
+        ports:
+            - "6379:6379"
+        networks:
+            - netsocs-network
+
+    mysql:
+        container_name: netsocs-mysql
+        image: mysql:8.0
+        restart: unless-stopped
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootpassword}
+            - MYSQL_DATABASE=${DB_NAME:-netsocs}
+            - MYSQL_USER=${DB_USER:-netsocs}
+            - MYSQL_PASSWORD=${DB_PASS:-password}
+        volumes:
+            - mysql_data:/var/lib/mysql
+            - ./mysql/init:/docker-entrypoint-initdb.d
+        ports:
+            - "3306:3306"
+        networks:
+            - netsocs-network
+
+    # Application Services
     keycloak:
         container_name: keycloak-service
         image: ghcr.io/netsocs-team/service.kc/main:c5e69dd293ccac44f84cf85f9953381c98609df4
@@ -89,3 +135,17 @@ services:
             - MYSQL_PORT=${DB_PORT}
             - MONGODB_URI=${MONGO_URI}
             - MEDIAMTX_DEFAULT_HOSTNAME=${MEDIAMTX_HOSTNAME}
+
+# Volumes for persistent data
+volumes:
+    mongodb_data:
+        driver: local
+    redis_data:
+        driver: local
+    mysql_data:
+        driver: local
+
+# Networks for service communication
+networks:
+    netsocs-network:
+        driver: bridge
