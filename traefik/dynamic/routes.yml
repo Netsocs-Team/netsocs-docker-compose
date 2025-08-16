@@ -97,7 +97,7 @@ http:
 
     # Keycloak Authentication
     keycloak:
-      rule: "Host(`${HTTP_HOSTNAME}`) && PathPrefix(`/auth`)"
+      rule: "PathPrefix(`/auth`)"
       priority: 10
       service: keycloak-service
       entryPoints:

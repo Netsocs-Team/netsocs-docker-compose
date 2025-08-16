@@ -15,23 +15,17 @@ api:
 # Entrypoints Configuration
 entryPoints:
   web:
-    address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
-          permanent: true
+    address: ":80" # Internal port for Caddy to connect
 
   websecure:
-    address: ":443"
+    address: ":443" # Internal HTTPS port (optional)
 
 # Providers Configuration
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    network: netsocs-network
+    network: "docker-compose_netsocs-network" # Updated with project prefix
     watch: true
 
   file:

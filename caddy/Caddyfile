@@ -1,6 +1,6 @@
-172.19.172.75 {
-tls {
+https:// {
+tls internal {
 on_demand
 }
-reverse_proxy http://traefik:80
+reverse_proxy traefik:80
 }
