@@ -1,0 +1,6 @@
+172.19.172.75 {
+tls {
+on_demand
+}
+reverse_proxy http://traefik:80
+}

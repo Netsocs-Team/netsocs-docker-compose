@@ -1,5 +1,6 @@
 # Traefik v3.0 Configuration File
 # =================================
+# Updated for internal use behind Caddy
 
 # Global Configuration
 global:
@@ -67,3 +68,12 @@ ping:
 healthcheck:
   interval: "10s"
   timeout: "5s"
+
+experimental:
+  plugins:
+    keycloakopenid:
+      moduleName: "github.com/Netsocs-Team/keycloakopenid"
+      version: "v1.0.4"
+    sec:
+      moduleName: "github.com/Netsocs-Team/traefik-owasp-security"
+      version: "v1.3.8"

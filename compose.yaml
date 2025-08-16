@@ -1,13 +1,27 @@
 services:
-    # Reverse Proxy
-    traefik:
-        image: traefik:v3.0
-        container_name: traefik
+    # Main Reverse Proxy with TLS
+    caddy:
+        image: caddy:2.8-alpine
+        container_name: netsocs-caddy
         restart: unless-stopped
         ports:
             - "80:80"
             - "443:443"
-            - "8080:8080" # Traefik Dashboard
+        volumes:
+            - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+            - caddy_data:/data
+            - caddy_config:/config
+        networks:
+            - netsocs-network
+        depends_on:
+            - traefik
+
+    # Internal Reverse Proxy (Traefik)
+    traefik:
+        image: traefik:v3.0
+        container_name: traefik
+        restart: unless-stopped
+        # No ports exposed - only internal communication
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
@@ -36,7 +50,7 @@ services:
         networks:
             - netsocs-network
 
-    netsocs-redis:
+    netsocs-redis-service:
         image: redis:7.2-alpine
         restart: unless-stopped
         command: redis-server --requirepass ${REDIS_PASS:-password}
@@ -92,7 +106,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
         environment:
             - PORT=3000
@@ -117,7 +131,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
         environment:
             - PORT=3091
@@ -133,7 +147,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.automation/backend:dev
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -148,7 +162,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.access_control/backend:main
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -173,7 +187,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
         environment:
             - REDIS_HOST=${REDIS_HOST}
@@ -197,6 +211,10 @@ volumes:
     redis_data:
         driver: local
     mysql_data:
+        driver: local
+    caddy_data:
+        driver: local
+    caddy_config:
         driver: local
 
 # Networks for service communication
