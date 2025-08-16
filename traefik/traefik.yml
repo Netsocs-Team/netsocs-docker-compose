@@ -2,23 +2,25 @@
 # =================================
 # Updated for internal use behind Caddy
 
+log:
+  level: DEBUG
 # Global Configuration
 global:
   checkNewVersion: false
   sendAnonymousUsage: false
 
+serversTransport:
+  insecureSkipVerify: true
+
 # API and Dashboard Configuration
 api:
   dashboard: true
-  debug: false
+  debug: true
 
 # Entrypoints Configuration
 entryPoints:
   web:
-    address: ":80" # Internal port for Caddy to connect
-
-  websecure:
-    address: ":443" # Internal HTTPS port (optional)
+    address: ":8081" # Internal port for Caddy to connect
 
 # Providers Configuration
 providers:
@@ -31,11 +33,6 @@ providers:
   file:
     directory: "/etc/traefik/dynamic"
     watch: true
-
-# Logging Configuration
-log:
-  level: INFO
-  format: json
 
 # Access Logs
 accessLog:

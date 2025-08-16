@@ -2,19 +2,21 @@
 # =========================================
 # Based on NETSOCS Helm Chart Configuration
 
+log:
+  level: DEBUG
 http:
   middlewares:
     # Keycloak Authentication Middleware
     keycloak:
       plugin:
         keycloakopenid:
-          KeycloakURL: ${HTTP_HOSTNAME}/auth/
-          ClientID: ${KEYCLOAK_CLIENT_ID}
-          ClientSecret: ${KEYCLOAK_CLIENT_SECRET}
+          KeycloakURL: https://172.19.172.75/auth/
+          ClientID: netsocs-kc
+          ClientSecret: wfwJZ6zkdKJtkA5vowBUemEcCFA98QkO
           KeycloakRealm: netsocs
           Scope: profile email
           TokenCookieName: NETSOCS_SESSION_USERID
-          InsecureSkipVerify: ${SKIP_INSECURE:-true}
+          InsecureSkipVerify: true
 
     # Security Headers Middleware
     sec-headers:

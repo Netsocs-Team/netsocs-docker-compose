@@ -12,8 +12,7 @@ http:
         - keycloak
       service: dashboard-frontend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     dashboard-frontend-access-control:
       rule: "PathPrefix(`/access_control/visits`)"
@@ -21,8 +20,7 @@ http:
         - keycloak
       service: dashboard-frontend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     dashboard-frontend-next:
       rule: "PathPrefix(`/_next`)"
@@ -30,8 +28,7 @@ http:
         - keycloak
       service: dashboard-frontend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # Dashboard Backend API
     dashboard-backend:
@@ -41,8 +38,7 @@ http:
         - strip-prefix-dashboard
       service: dashboard-backend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # Configuration Frontend
     configuration-frontend:
@@ -51,8 +47,7 @@ http:
         - keycloak
       service: configuration-frontend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # Configuration Backend API
     configuration-backend:
@@ -62,8 +57,7 @@ http:
         - add-api-v2-config
       service: configuration-backend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # Access Control Backend API
     access-control-backend:
@@ -72,8 +66,7 @@ http:
         - strip-prefix-access
       service: access-control-backend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # Automation Backend API
     automation-backend:
@@ -82,8 +75,7 @@ http:
         - strip-prefix-automation
       service: automation-backend-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # DriverHub API
     driverhub:
@@ -92,8 +84,7 @@ http:
         - strip-prefix-dh
       service: driverhub-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
     # Keycloak Authentication
     keycloak:
@@ -101,8 +92,7 @@ http:
       priority: 10
       service: keycloak-service
       entryPoints:
-        - websecure
-      tls: {}
+        - web
 
   services:
     # Dashboard Frontend Service

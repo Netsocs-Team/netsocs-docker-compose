@@ -21,6 +21,8 @@ services:
         image: traefik:v3.0
         container_name: traefik
         restart: always
+        ports:
+            - "8081:8081"
         # No ports exposed - only internal communication
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -138,6 +140,8 @@ services:
             - netsocs-mongodb
             - netsocs-redis
         image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
+        env_file:
+            - .env
         environment:
             - PORT=3091
             - NAME_DB=${DB_NAME}
@@ -145,6 +149,15 @@ services:
             - USER_DB=${DB_USER}
             - PASS_DB=${DB_PASS}
             - PORT_DB=${DB_PORT}
+            - DRIVER_HUB_URL_API=http://netsocs-driverhub-service:3196
+            - DEFAULT_REPO=https://netsocs-public-drivers-repository.s3.us-east-1.amazonaws.com/repodemo.json
+            - KEYCLOACK_REALM=${KEYCLOAK_REALM:-master}
+            - KEYCLOACK_BASE_URL=${HTTP_HOSTNAME}
+            - KEYCLOACK_CLIENT_ID=${KEYCLOAK_CLIENT_ID:-netsocs-config}
+            - KEYCLOACK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+            - KEYCLOACK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME:-admin}
+            - KEYCLOACK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+            - NETSOCS_VERSION=${NETSOCS_VERSION:-dev}
         networks:
             - netsocs-network
 
