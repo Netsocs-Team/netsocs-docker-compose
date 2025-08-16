@@ -1,0 +1,155 @@
+# Traefik Dynamic Configuration - Routes
+# =====================================
+# Based on NETSOCS Helm Chart Configuration
+
+http:
+  routers:
+    # Dashboard Frontend Routes
+    dashboard-frontend:
+      rule: "PathPrefix(`/`)"
+      priority: 1
+      middlewares:
+        - keycloak
+      service: dashboard-frontend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    dashboard-frontend-access-control:
+      rule: "PathPrefix(`/access_control/visits`)"
+      middlewares:
+        - keycloak
+      service: dashboard-frontend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    dashboard-frontend-next:
+      rule: "PathPrefix(`/_next`)"
+      middlewares:
+        - keycloak
+      service: dashboard-frontend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # Dashboard Backend API
+    dashboard-backend:
+      rule: "PathPrefix(`/api/netsocs/module.dashboard-v2`)"
+      middlewares:
+        - keycloak
+        - strip-prefix-dashboard
+      service: dashboard-backend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # Configuration Frontend
+    configuration-frontend:
+      rule: "PathPrefix(`/n/config`)"
+      middlewares:
+        - keycloak
+      service: configuration-frontend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # Configuration Backend API
+    configuration-backend:
+      rule: "PathPrefix(`/api/netsocs/module.configuration-v2`)"
+      middlewares:
+        - strip-prefix-configuration
+        - add-api-v2-config
+      service: configuration-backend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # Access Control Backend API
+    access-control-backend:
+      rule: "PathPrefix(`/api/netsocs/module.access_control`)"
+      middlewares:
+        - strip-prefix-access
+      service: access-control-backend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # Automation Backend API
+    automation-backend:
+      rule: "PathPrefix(`/api/netsocs/automation`)"
+      middlewares:
+        - strip-prefix-automation
+      service: automation-backend-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # DriverHub API
+    driverhub:
+      rule: "PathPrefix(`/api/netsocs/dh`)"
+      middlewares:
+        - strip-prefix-dh
+      service: driverhub-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+    # Keycloak Authentication
+    keycloak:
+      rule: "Host(`${HTTP_HOSTNAME}`) && PathPrefix(`/auth`)"
+      priority: 10
+      service: keycloak-service
+      entryPoints:
+        - websecure
+      tls: {}
+
+  services:
+    # Dashboard Frontend Service
+    dashboard-frontend-service:
+      loadBalancer:
+        servers:
+          - url: "http://netsocs-modules-dashboard-frontend-service:3000"
+
+    # Dashboard Backend Service
+    dashboard-backend-service:
+      loadBalancer:
+        servers:
+          - url: "http://netsocs-modules-dashboard-backend-service-v2:3000"
+
+    # Configuration Frontend Service
+    configuration-frontend-service:
+      loadBalancer:
+        servers:
+          - url: "http://netsocs-modules-configuration-frontend-service:3690"
+
+    # Configuration Backend Service
+    configuration-backend-service:
+      loadBalancer:
+        servers:
+          - url: "http://netsocs-modules-configuration-backendv2-service:3091"
+
+    # Access Control Backend Service
+    access-control-backend-service:
+      loadBalancer:
+        servers:
+          - url: "http://netsocs-modules-accesscontrol-backend-service:3000"
+
+    # Automation Backend Service
+    automation-backend-service:
+      loadBalancer:
+        servers:
+          - url: "http://automation-backend-service:8080"
+
+    # DriverHub Service
+    driverhub-service:
+      loadBalancer:
+        servers:
+          - url: "http://netsocs-driverhub-service:3196"
+
+    # Keycloak Service
+    keycloak-service:
+      loadBalancer:
+        servers:
+          - url: "https://keycloak-service:8443"
+        passHostHeader: true

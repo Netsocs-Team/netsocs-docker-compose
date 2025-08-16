@@ -1,0 +1,111 @@
+# Traefik Dynamic Configuration - Middlewares
+# =========================================
+# Based on NETSOCS Helm Chart Configuration
+
+http:
+  middlewares:
+    # Keycloak Authentication Middleware
+    keycloak:
+      plugin:
+        keycloakopenid:
+          KeycloakURL: ${HTTP_HOSTNAME}/auth/
+          ClientID: ${KEYCLOAK_CLIENT_ID}
+          ClientSecret: ${KEYCLOAK_CLIENT_SECRET}
+          KeycloakRealm: netsocs
+          Scope: profile email
+          TokenCookieName: NETSOCS_SESSION_USERID
+          InsecureSkipVerify: ${SKIP_INSECURE:-true}
+
+    # Security Headers Middleware
+    sec-headers:
+      plugin:
+        sec:
+          skipCookieSecurity: false
+
+    # CORS Middleware
+    cors:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowHeaders:
+          - Authorization
+          - Content-Type
+          - X-Requested-With
+        accessControlAllowOriginList:
+          - "*"
+        accessControlMaxAge: 86400
+        addVaryHeader: true
+
+    # Rate Limiting Middleware
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+
+    # Security Headers Middleware (Alternative)
+    security-headers:
+      headers:
+        frameDeny: true
+        sslRedirect: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: "SAMEORIGIN"
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        customResponseHeaders:
+          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+          Server: ""
+
+    # Strip Prefix Middlewares for Services
+    strip-prefix-dh:
+      stripPrefix:
+        prefixes:
+          - /api/netsocs/dh
+
+    strip-prefix-dashboard:
+      stripPrefix:
+        prefixes:
+          - /api/netsocs/module.dashboard-v2
+
+    strip-prefix-configuration:
+      stripPrefix:
+        prefixes:
+          - /api/netsocs/module.configuration-v2
+
+    strip-prefix-access:
+      stripPrefix:
+        prefixes:
+          - /api/netsocs/module.access_control
+
+    strip-prefix-automation:
+      stripPrefix:
+        prefixes:
+          - /api/netsocs/automation
+
+    # Add Prefix Middleware for Configuration Backend
+    add-api-v2-config:
+      addPrefix:
+        prefix: /api/v2
+
+    # Basic Auth Middleware Example (uncomment and configure as needed)
+    # basic-auth:
+    #   basicAuth:
+    #     users:
+    #       - "admin:$2y$10$..."
+    #     removeHeader: true
+
+    # IP Whitelist Middleware Example (uncomment and configure as needed)
+    # ip-whitelist:
+    #   ipWhiteList:
+    #     sourceRange:
+    #       - "10.0.0.0/8"
+    #       - "172.16.0.0/12"
+    #       - "192.168.0.0/16"

@@ -89,6 +89,10 @@ services:
             - netsocs-network
 
     netsocs-modules-dashboard-backend-service-v2:
+        depends_on:
+            - netsocs-mysql
+            - netsocs-mongodb
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
         environment:
             - PORT=3000
@@ -110,6 +114,10 @@ services:
             - netsocs-network
 
     netsocs-modules-configuration-backendv2-service:
+        depends_on:
+            - netsocs-mysql
+            - netsocs-mongodb
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
         environment:
             - PORT=3091
@@ -122,6 +130,10 @@ services:
             - netsocs-network
 
     automation-backend-service:
+        depends_on:
+            - netsocs-mysql
+            - netsocs-mongodb
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.automation/backend:dev
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -133,6 +145,10 @@ services:
             - netsocs-network
 
     netsocs-modules-accesscontrol-backend-service:
+        depends_on:
+            - netsocs-mysql
+            - netsocs-mongodb
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.access_control/backend:main
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -154,6 +170,10 @@ services:
             - netsocs-network
 
     netsocs-driverhub-service:
+        depends_on:
+            - netsocs-mysql
+            - netsocs-mongodb
+            - netsocs-redis
         image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
         environment:
             - REDIS_HOST=${REDIS_HOST}
