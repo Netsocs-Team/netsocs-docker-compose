@@ -1,0 +1,62 @@
+# Traefik Dynamic Configuration - TLS/HTTPS
+# =========================================
+
+# TLS Configuration
+tls:
+  # Default TLS Options
+  options:
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+      sniStrict: true
+
+    # Modern TLS Options (for newer clients)
+    modern:
+      minVersion: VersionTLS13
+      sniStrict: true
+
+    # Intermediate TLS Options (compatibility)
+    intermediate:
+      minVersion: VersionTLS11
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+        - CurveP256
+      sniStrict: true
+# Certificate Resolvers (for Let's Encrypt or other ACME providers)
+# Uncomment and configure as needed
+# http:
+#   routers:
+#     example:
+#       tls:
+#         certResolver: letsencrypt
+#
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: your-email@example.com
+#       storage: /etc/traefik/certificates/acme.json
+#       httpChallenge:
+#         entryPoint: web
+#       # Alternative: DNS challenge for wildcard certificates
+#       # dnsChallenge:
+#       #   provider: cloudflare
+#       #   resolvers:
+#       #     - "1.1.1.1:53"
+#       #     - "8.8.8.8:53"

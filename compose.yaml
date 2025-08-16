@@ -1,4 +1,26 @@
 services:
+    # Reverse Proxy
+    traefik:
+        image: traefik:v3.0
+        container_name: traefik
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+            - "8080:8080" # Traefik Dashboard
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+            - ./traefik/dynamic:/etc/traefik/dynamic:ro
+            - ./traefik/certificates:/etc/traefik/certificates:ro
+        networks:
+            - netsocs-network
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.entrypoints=web"
+
     # Database Services
     netsocs-mongodb:
         image: mongo:7.0
