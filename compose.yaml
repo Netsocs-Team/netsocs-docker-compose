@@ -1,7 +1,6 @@
 services:
     # Database Services
-    mongodb:
-        container_name: netsocs-mongodb
+    netsocs-mongodb:
         image: mongo:7.0
         restart: unless-stopped
         environment:
@@ -15,8 +14,7 @@ services:
         networks:
             - netsocs-network
 
-    redis:
-        container_name: netsocs-redis
+    netsocs-redis:
         image: redis:7.2-alpine
         restart: unless-stopped
         command: redis-server --requirepass ${REDIS_PASS:-password}
@@ -27,8 +25,7 @@ services:
         networks:
             - netsocs-network
 
-    mysql:
-        container_name: netsocs-mysql
+    netsocs-mysql:
         image: mysql:8.0
         restart: unless-stopped
         environment:
@@ -45,8 +42,7 @@ services:
             - netsocs-network
 
     # Application Services
-    keycloak:
-        container_name: keycloak-service
+    keycloak-service:
         image: ghcr.io/netsocs-team/service.kc/main:c5e69dd293ccac44f84cf85f9953381c98609df4
         environment:
             - KEYCLOAK_LOGLEVEL=ALL
@@ -62,11 +58,15 @@ services:
             - KC_DB_PASSWORD=${DB_PASS}
             - KC_DB_URL_HOST=${DB_HOST}
             - KC_DB_URL_PORT=${DB_PORT}
-    dashboard_frontend:
-        container_name: netsocs-modules-dashboard-frontend-service
+        networks:
+            - netsocs-network
+
+    netsocs-modules-dashboard-frontend-service:
         image: ghcr.io/netsocs-team/module.dashboard/frontend:dev
-    dashboard_backend:
-        container_name: netsocs-modules-dashboard-backend-service-v2
+        networks:
+            - netsocs-network
+
+    netsocs-modules-dashboard-backend-service-v2:
         image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
         environment:
             - PORT=3000
@@ -79,11 +79,15 @@ services:
             - DRIVERHUB_API_URL=http://netsocs-driverhub-service:3196
             - MONGODB_URI=${MONGO_URI}
             - MONGODB_DATABASE=${MONGO_DATABASE}
-    configuration_frontend:
-        container_name: netsocs-modules-configuration-frontend-service
+        networks:
+            - netsocs-network
+
+    netsocs-modules-configuration-frontend-service:
         image: ghcr.io/netsocs-team/module.configuration/frontend:dev
-    configuration_backend:
-        container_name: netsocs-modules-configuration-backendv2-service
+        networks:
+            - netsocs-network
+
+    netsocs-modules-configuration-backendv2-service:
         image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
         environment:
             - PORT=3091
@@ -92,7 +96,10 @@ services:
             - USER_DB=${DB_USER}
             - PASS_DB=${DB_PASS}
             - PORT_DB=${DB_PORT}
-    automation:
+        networks:
+            - netsocs-network
+
+    automation-backend-service:
         image: ghcr.io/netsocs-team/module.automation/backend:dev
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -100,9 +107,10 @@ services:
             - MYSQL_PASSWORD=${DB_PASS}
             - MYSQL_PORT=${DB_PORT}
             - MYSQL_DATABASE=${DB_NAME}
-        container_name: automation-backend-service
-    access_control_backend:
-        container_name: netsocs-modules-accesscontrol-backend-service
+        networks:
+            - netsocs-network
+
+    netsocs-modules-accesscontrol-backend-service:
         image: ghcr.io/netsocs-team/module.access_control/backend:main
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -120,8 +128,10 @@ services:
             - DRIVERHUB_URL=http://netsocs-driverhub-service:3196
             - CONFIG_MODULE_API_V2_URL=http://netsocs-modules-configuration-backendv2-service:3091/api/v2
             - STATIC_FOLDER=static
-    driverhub:
-        container_name: netsocs-driverhub-service
+        networks:
+            - netsocs-network
+
+    netsocs-driverhub-service:
         image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
         environment:
             - REDIS_HOST=${REDIS_HOST}
@@ -135,6 +145,8 @@ services:
             - MYSQL_PORT=${DB_PORT}
             - MONGODB_URI=${MONGO_URI}
             - MEDIAMTX_DEFAULT_HOSTNAME=${MEDIAMTX_HOSTNAME}
+        networks:
+            - netsocs-network
 
 # Volumes for persistent data
 volumes:
