@@ -3,7 +3,7 @@ services:
     caddy:
         image: caddy:2.8-alpine
         container_name: netsocs-caddy
-        restart: unless-stopped
+        restart: always
         ports:
             - "80:80"
             - "443:443"
@@ -20,7 +20,7 @@ services:
     traefik:
         image: traefik:v3.0
         container_name: traefik
-        restart: unless-stopped
+        restart: always
         # No ports exposed - only internal communication
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -38,7 +38,7 @@ services:
     # Database Services
     netsocs-mongodb:
         image: mongo:7.0
-        restart: unless-stopped
+        restart: always
         environment:
             - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER:-root}
             - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
@@ -50,9 +50,9 @@ services:
         networks:
             - netsocs-network
 
-    netsocs-redis-service:
+    netsocs-redis:
         image: redis:7.2-alpine
-        restart: unless-stopped
+        restart: always
         command: redis-server --requirepass ${REDIS_PASS:-password}
         volumes:
             - redis_data:/data
@@ -63,7 +63,7 @@ services:
 
     netsocs-mysql:
         image: mysql:8.0
-        restart: unless-stopped
+        restart: always
         environment:
             - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootpassword}
             - MYSQL_DATABASE=${DB_NAME:-netsocs}
@@ -80,6 +80,7 @@ services:
     # Application Services
     keycloak-service:
         image: ghcr.io/netsocs-team/service.kc/main:c5e69dd293ccac44f84cf85f9953381c98609df4
+        restart: always
         environment:
             - KEYCLOAK_LOGLEVEL=ALL
             - KEYCLOAK_ADMIN=admin
@@ -99,14 +100,16 @@ services:
 
     netsocs-modules-dashboard-frontend-service:
         image: ghcr.io/netsocs-team/module.dashboard/frontend:dev
+        restart: always
         networks:
             - netsocs-network
 
     netsocs-modules-dashboard-backend-service-v2:
+        restart: always
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis-service
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
         environment:
             - PORT=3000
@@ -124,14 +127,16 @@ services:
 
     netsocs-modules-configuration-frontend-service:
         image: ghcr.io/netsocs-team/module.configuration/frontend:dev
+        restart: always
         networks:
             - netsocs-network
 
     netsocs-modules-configuration-backendv2-service:
+        restart: always
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis-service
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
         environment:
             - PORT=3091
@@ -144,10 +149,11 @@ services:
             - netsocs-network
 
     automation-backend-service:
+        restart: always
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis-service
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.automation/backend:dev
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -159,10 +165,11 @@ services:
             - netsocs-network
 
     netsocs-modules-accesscontrol-backend-service:
+        restart: always
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis-service
+            - netsocs-redis
         image: ghcr.io/netsocs-team/module.access_control/backend:main
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -184,10 +191,11 @@ services:
             - netsocs-network
 
     netsocs-driverhub-service:
+        restart: always
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis-service
+            - netsocs-redis
         image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
         environment:
             - REDIS_HOST=${REDIS_HOST}
