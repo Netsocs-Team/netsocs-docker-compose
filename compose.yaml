@@ -1,0 +1,74 @@
+services:
+    dashboard_frontend:
+        container_name: netsocs-modules-dashboard-frontend-service
+        image: ghcr.io/netsocs-team/module.dashboard/frontend:dev
+    dashboard_backend:
+        container_name: netsocs-modules-dashboard-backend-service-v2
+        image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
+        environment:
+            - PORT=3000
+            - MYSQLDB_USER=${DB_USER}
+            - MYSQLDB_PASSWORD=${DB_PASS}
+            - MYSQLDB_HOST=${DB_HOST}
+            - MYSQLDB_PORT=${DB_PORT}
+            - MYSQLDB_DATABASE=${DB_NAME}
+            - MYSQLDB_TABLE_PREFIX=dashboard_
+            - DRIVERHUB_API_URL=http://netsocs-driverhub-service:3196
+            - MONGODB_URI=${MONGO_URI}
+            - MONGODB_DATABASE=${MONGO_DATABASE}
+    configuration_frontend:
+        container_name: netsocs-modules-configuration-frontend-service
+        image: ghcr.io/netsocs-team/module.configuration/frontend:dev
+    configuration_backend:
+        container_name: netsocs-modules-configuration-backendv2-service
+        image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
+        environment:
+            - PORT=3091
+            - NAME_DB=${DB_NAME}
+            - HOST_DB=${DB_HOST}
+            - USER_DB=${DB_USER}
+            - PASS_DB=${DB_PASS}
+            - PORT_DB=${DB_PORT}
+    automation:
+        image: ghcr.io/netsocs-team/module.automation/backend:dev
+        environment:
+            - MYSQL_HOST=${DB_HOST}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+            - MYSQL_PORT=${DB_PORT}
+            - MYSQL_DATABASE=${DB_NAME}
+        container_name: automation-backend-service
+    access_control_backend:
+        container_name: netsocs-modules-accesscontrol-backend-service
+        image: ghcr.io/netsocs-team/module.access_control/backend:main
+        environment:
+            - MYSQL_HOST=${DB_HOST}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+            - MYSQL_PORT=${DB_PORT}
+            - TABLE_PREFIX=ac
+            - MYSQL_DATABASE=${DB_NAME}
+            - API_PORT=3000
+            - ENABLE_CORS=true
+            - MAIL_HOST=gator2120.hostgator.com
+            - MAIL_PORT=465
+            - MAIL_USERNAME=teresa.carreno@netsocs.com
+            - MAIL_PASSWORD=p4ssword
+            - DRIVERHUB_URL=http://netsocs-driverhub-service:3196
+            - CONFIG_MODULE_API_V2_URL=http://netsocs-modules-configuration-backendv2-service:3091/api/v2
+            - STATIC_FOLDER=static
+    driverhub:
+        container_name: netsocs-driverhub-service
+        image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
+        environment:
+            - REDIS_HOST=${REDIS_HOST}
+            - REDIS_PORT=${REDIS_PORT}
+            - REDIS_PASSWORD=${REDIS_PASS}
+            - STATIC_FOLDER=/app/static
+            - MYSQL_DATABASE=${DB_NAME}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+            - MYSQL_HOST=${DB_HOST}
+            - MYSQL_PORT=${DB_PORT}
+            - MONGODB_URI=${MONGO_URI}
+            - MEDIAMTX_DEFAULT_HOSTNAME=${MEDIAMTX_HOSTNAME}
