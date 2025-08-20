@@ -79,7 +79,6 @@ services:
         networks:
             - netsocs-network
 
-    # Application Services
     keycloak-service:
         image: ghcr.io/netsocs-team/service.kc/main:c5e69dd293ccac44f84cf85f9953381c98609df4
         restart: always
@@ -99,6 +98,7 @@ services:
             - KC_DB_URL_PORT=${DB_PORT}
         networks:
             - netsocs-network
+    # Application Services
 
     netsocs-modules-dashboard-frontend-service:
         image: ghcr.io/netsocs-team/module.dashboard/frontend:dev
