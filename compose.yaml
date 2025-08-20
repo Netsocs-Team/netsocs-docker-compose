@@ -225,6 +225,15 @@ services:
         networks:
             - netsocs-network
 
+    mediamtx-service:
+        restart: always
+        image: ghcr.io/netsocs-team/mediamtx_with_persistence/main:latest
+        network_mode: host
+
+        volumes:
+            - ./recordings:/recordings:rw
+            - ./mediamtx:/etc/mediamtx
+
 # Volumes for persistent data
 volumes:
     mongodb_data:
