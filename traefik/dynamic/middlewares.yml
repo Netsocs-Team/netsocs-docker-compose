@@ -10,7 +10,7 @@ http:
     keycloak:
       plugin:
         keycloakopenid:
-          KeycloakURL: https://172.19.172.75/auth/
+          KeycloakURL: {{ env "HTTP_HOSTNAME" }}/auth/
           ClientID: netsocs-kc
           ClientSecret: wfwJZ6zkdKJtkA5vowBUemEcCFA98QkO
           KeycloakRealm: netsocs
