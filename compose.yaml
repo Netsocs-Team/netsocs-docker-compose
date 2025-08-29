@@ -235,6 +235,10 @@ services:
         volumes:
             - ./recordings:/recordings:rw
             - ./mediamtx:/etc/mediamtx
+    netsoc-site:
+        restart: always
+        image: ghcr.io/netsocs-team/sitemanager/site:latest
+        network_mode: host
 
 # Volumes for persistent data
 volumes:
