@@ -54,7 +54,7 @@ services:
         networks:
             - netsocs-network
 
-    netsocs-redis:
+    netsocs-redis-service:
         image: redis:7.2-alpine
         restart: always
         command: redis-server --requirepass ${REDIS_PASS:-password}
@@ -113,7 +113,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
         environment:
             - PORT=3000
@@ -140,7 +140,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
         env_file:
             - .env
@@ -168,14 +168,18 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.automation/backend:dev
         environment:
-            - MYSQL_HOST=${DB_HOST}
-            - MYSQL_USER=${DB_USER}
-            - MYSQL_PASSWORD=${DB_PASS}
-            - MYSQL_PORT=${DB_PORT}
+            - MYSQLDB_HOST=${DB_HOST}
+            - MYSQLDB_USER=${DB_USER}
+            - MYSQLDB_PASSWORD=${DB_PASS}
+            - MYSQLDB_PORT=${DB_PORT}
             - MYSQL_DATABASE=${DB_NAME}
+            - MYSQLDB_AUTOMATION_DATABASE=${DB_NAME}
+            - REDIS_PORT=${REDIS_PORT}
+            - REDIS_PASSWORD=${REDIS_PASS}
+            - DB_TABLE_PREFIX=automation_
         networks:
             - netsocs-network
 
@@ -184,7 +188,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/module.access_control/backend:main
         environment:
             - MYSQL_HOST=${DB_HOST}
@@ -210,7 +214,7 @@ services:
         depends_on:
             - netsocs-mysql
             - netsocs-mongodb
-            - netsocs-redis
+            - netsocs-redis-service
         image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
         environment:
             - REDIS_HOST=${REDIS_HOST}
