@@ -103,7 +103,7 @@ services:
     # Application Services
 
     netsocs-modules-dashboard-frontend-service:
-        image: ghcr.io/netsocs-team/module.dashboard/frontend:dev
+        image: ghcr.io/netsocs-team/module.dashboard/frontend:2f59d0770c103160c182782cad3243ee6158c071
         restart: always
         networks:
             - netsocs-network
@@ -114,7 +114,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.dashboard/backendv2:dev
+        image: ghcr.io/netsocs-team/module.dashboard/backendv2:7bdaf8e9c32de2e21473dce5848c4518ae8a88c7
         environment:
             - PORT=3000
             - MYSQLDB_USER=${DB_USER}
@@ -130,7 +130,7 @@ services:
             - netsocs-network
 
     netsocs-modules-configuration-frontend-service:
-        image: ghcr.io/netsocs-team/module.configuration/frontend:dev
+        image: ghcr.io/netsocs-team/module.configuration/frontend:93921e7fdccd237ca39af49da95e769a593d5cea
         restart: always
         networks:
             - netsocs-network
@@ -141,7 +141,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.configuration/backend_v2:dev
+        image: ghcr.io/netsocs-team/module.configuration/backend_v2:61ffb905f5929adf4df597da5d546a502da0ce71
         env_file:
             - .env
         environment:
@@ -169,7 +169,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.automation/backend:dev
+        image: ghcr.io/netsocs-team/module.automation/backend:34a9a7a257d44eb809234e1856f6cf62d57217a7
         environment:
             - MYSQLDB_HOST=${DB_HOST}
             - MYSQLDB_USER=${DB_USER}
@@ -189,7 +189,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.access_control/backend:main
+        image: ghcr.io/netsocs-team/module.access_control/backend:a11849a9e7ee87bb5f8fd4e5dc896bb8ce196c93
         environment:
             - MYSQL_HOST=${DB_HOST}
             - MYSQL_USER=${DB_USER}
@@ -215,7 +215,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/service.driver_hub/backend:dev
+        image: ghcr.io/netsocs-team/service.driver_hub/backend:deb6e3079b86ca894f3fdba905a2c61ba8e6c9aa
         environment:
             - REDIS_HOST=${REDIS_HOST}
             - REDIS_PORT=${REDIS_PORT}
