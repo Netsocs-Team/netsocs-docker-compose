@@ -103,7 +103,7 @@ services:
     # Application Services
 
     netsocs-modules-dashboard-frontend-service:
-        image: ghcr.io/netsocs-team/module.dashboard/frontend:2f59d0770c103160c182782cad3243ee6158c071
+        image: ghcr.io/netsocs-team/module.dashboard/frontend:a0b2cd153f6ec35e72d0bc23b63b58a4f0c18d3a
         restart: always
         networks:
             - netsocs-network
@@ -130,7 +130,7 @@ services:
             - netsocs-network
 
     netsocs-modules-configuration-frontend-service:
-        image: ghcr.io/netsocs-team/module.configuration/frontend:93921e7fdccd237ca39af49da95e769a593d5cea
+        image: ghcr.io/netsocs-team/module.configuration/frontend:3a2c39180406c87c1ec0261e360ef8d2bd0443c9
         restart: always
         networks:
             - netsocs-network
@@ -141,7 +141,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.configuration/backend_v2:61ffb905f5929adf4df597da5d546a502da0ce71
+        image: ghcr.io/netsocs-team/module.configuration/backend_v2:14886195a5d687bb69c631251e0878761752c0b8
         env_file:
             - .env
         environment:
@@ -159,7 +159,7 @@ services:
             - KEYCLOACK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
             - KEYCLOACK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME:-admin}
             - KEYCLOACK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin123}
-            - NETSOCS_VERSION=${NETSOCS_VERSION:-dev}
+            - NETSOCS_VERSION=2.11338.0
         networks:
             - netsocs-network
 
@@ -169,7 +169,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.automation/backend:34a9a7a257d44eb809234e1856f6cf62d57217a7
+        image: ghcr.io/netsocs-team/module.automation/backend:6dd6f590112e84cbecbf96965632f40d56e5ec1c
         environment:
             - MYSQLDB_HOST=${DB_HOST}
             - MYSQLDB_USER=${DB_USER}
@@ -189,7 +189,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/module.access_control/backend:a11849a9e7ee87bb5f8fd4e5dc896bb8ce196c93
+        image: ghcr.io/netsocs-team/module.access_control/backend:8e4421a838575aaef708892962fef7a7357a009b
         environment:
             - MYSQL_HOST=${DB_HOST}
             - MYSQL_USER=${DB_USER}
@@ -215,7 +215,7 @@ services:
             - netsocs-mysql
             - netsocs-mongodb
             - netsocs-redis-service
-        image: ghcr.io/netsocs-team/service.driver_hub/backend:deb6e3079b86ca894f3fdba905a2c61ba8e6c9aa
+        image: ghcr.io/netsocs-team/service.driver_hub/backend:d1f6343b128bb223ea8ecc3eecb48bca18cd0c70
         environment:
             - REDIS_HOST=${REDIS_HOST}
             - REDIS_PORT=${REDIS_PORT}
